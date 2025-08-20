@@ -18,7 +18,8 @@ public abstract class AbstractUUIDModel {
     private UUID id;
 
     @Version
-    private int version;
+    @Column(nullable = false, columnDefinition = "integer default 0")
+    private Integer version = 0;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
