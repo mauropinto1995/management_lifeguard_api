@@ -1,35 +1,24 @@
 package com.braveheart.gestao_ns_api.service.mapper;
 
 import com.braveheart.gestao_ns_api.model.User;
-import com.braveheart.gestao_ns_api.service.dto.UserRegularDto;
-import com.braveheart.gestao_ns_api.service.dto.UserReportDto;
+import com.braveheart.gestao_ns_api.service.dto.UserDto;
+import org.springframework.stereotype.Component;
 
+@Component
 public class UserMapper {
 
-    public UserRegularDto toUserRegularDto(User user) {
+    public UserDto toDto(User user) {
         if (user == null) {
             return null;
         }
-
-        return new UserRegularDto(
+        return new UserDto(
                 user.getId(),
-                user.getFirstName() + " " + user.getLastName(),
+                user.getEmail(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getPhoneNumber(),
+                user.getSignatureImageUrl(),
                 user.isEditor()
         );
-
     }
-
-    /*public UserReportDto  toUserReportDto(User user) {
-        if (user == null) {
-            return null;
-        }
-
-        return new UserReportDto(
-                user.getId(),
-                user.getFirstName() + " " + user.getLastName(),
-                user.getNationality(),
-                user.getGender(),
-                user.
-                );
-    }*/
 }

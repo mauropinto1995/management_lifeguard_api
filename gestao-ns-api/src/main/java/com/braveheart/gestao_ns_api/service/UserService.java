@@ -2,6 +2,8 @@ package com.braveheart.gestao_ns_api.service;
 
 import com.braveheart.gestao_ns_api.exception.ResourceNotFoundException;
 import com.braveheart.gestao_ns_api.model.User;
+import com.braveheart.gestao_ns_api.service.dto.UserDto;
+import com.braveheart.gestao_ns_api.service.dto.UserProfileUpdateDto;
 import com.braveheart.gestao_ns_api.service.dto.UserWebhookDto;
 
 import java.util.UUID;
@@ -21,4 +23,19 @@ public interface UserService {
      * @throws ResourceNotFoundException if the user is not found.
      */
     User findById(UUID userId);
+
+    /**
+     * Gets the profile of the currently authenticated user.
+     *
+     * @return A DTO representing the user's profile.
+     */
+    UserDto getMyProfile();
+
+    /**
+     * Updates the profile of the currently authenticated user.
+     *
+     * @param dto The DTO containing the updated information.
+     * @return A DTO representing the updated user's profile.
+     */
+    UserDto updateMyProfile(UserProfileUpdateDto dto);
 }

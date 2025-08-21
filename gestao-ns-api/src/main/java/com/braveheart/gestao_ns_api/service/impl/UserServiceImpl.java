@@ -6,8 +6,12 @@ import com.braveheart.gestao_ns_api.model.AllowedEmail;
 import com.braveheart.gestao_ns_api.model.User;
 import com.braveheart.gestao_ns_api.repository.AllowedEmailRepository;
 import com.braveheart.gestao_ns_api.repository.UserRepository;
+import com.braveheart.gestao_ns_api.security.SecurityUtils;
 import com.braveheart.gestao_ns_api.service.UserService;
+import com.braveheart.gestao_ns_api.service.dto.UserDto;
+import com.braveheart.gestao_ns_api.service.dto.UserProfileUpdateDto;
 import com.braveheart.gestao_ns_api.service.dto.UserWebhookDto;
+import com.braveheart.gestao_ns_api.service.mapper.UserMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -26,12 +30,17 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final AllowedEmailRepository allowedEmailRepository;
     private final SupabaseAdminService supabaseAdminService;
+    private final UserMapper userMapper;
 
 
-    public UserServiceImpl(UserRepository userRepository, AllowedEmailRepository allowedEmailRepository, SupabaseAdminService supabaseAdminService) {
+    public UserServiceImpl(UserRepository userRepository,
+                           AllowedEmailRepository allowedEmailRepository,
+                           SupabaseAdminService supabaseAdminService,
+                           UserMapper userMapper) {
         this.userRepository = userRepository;
         this.allowedEmailRepository = allowedEmailRepository;
         this.supabaseAdminService = supabaseAdminService;
+        this.userMapper = userMapper;
     }
 
     /**
@@ -88,5 +97,32 @@ public class UserServiceImpl implements UserService {
         log.debug("Searching for user with ID: {}", userId);
         return userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + userId));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public UserDto getMyProfile() {
+        UUID currentUserId = SecurityUtils.getCurrentUserUuid();
+        return userRepository.findById(currentUserId)
+                .map(userMapper::toDto)
+                .orElseThrow(() -> new ResourceNotFoundException("Current user not found in database."));
+    }
+
+    @Override
+    public UserDto updateMyProfile(UserProfileUpdateDto dto) {
+        UUID currentUserId = SecurityUtils.getCurrentUserUuid();
+        User currentUser = userRepository.findById(currentUserId)
+                .orElseThrow(() -> new ResourceNotFoundException("Current user not found in database."));
+
+
+        currentUser.setFirstName(dto.firstName());
+        currentUser.setLastName(dto.lastName());
+        currentUser.setPhoneNumber(dto.phoneNumber());
+        currentUser.setSignatureImageUrl(dto.signatureImageUrl());
+
+        User updatedUser = userRepository.save(currentUser);
+        log.info("User profile updated for user ID: {}", currentUserId);
+
+        return userMapper.toDto(updatedUser);
     }
 }
