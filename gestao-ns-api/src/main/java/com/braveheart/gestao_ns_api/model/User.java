@@ -13,10 +13,10 @@ import java.time.LocalDate;
 @Table(name ="\"user\"")
 public class User extends AbstractUUIDModel {
 
-    @Column(name = "first_name", nullable = false, length = 50) // Increased length for safety
+    @Column(name = "first_name", nullable = false, length = 50)
     private String firstName;
 
-    @Column(name = "last_name", nullable = false, length = 50) // Increased length for safety
+    @Column(name = "last_name", nullable = false, length = 50)
     private String lastName;
 
     @Column(nullable = false, length = 50)
@@ -38,14 +38,14 @@ public class User extends AbstractUUIDModel {
     private boolean isEditor;
 
     @Column(name = "lifeguard_number", nullable = false)
-    private int lifeguardNumber;
+    private Integer lifeguardNumber;
 
     @Column(name = "signature_image_url", length = 255)
     private String signatureImageUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id")
-    private Address address; // This will now correctly refer to your Address entity
+    private Address address;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "association_id")

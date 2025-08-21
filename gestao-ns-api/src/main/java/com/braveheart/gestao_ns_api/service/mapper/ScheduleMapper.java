@@ -19,7 +19,8 @@ public class ScheduleMapper {
                 schedule.getPost().getName(),
                 schedule.getUser().getId(),
                 schedule.getUser().getFirstName(),
-                schedule.getUser().getLastName()
+                schedule.getUser().getLastName(),
+                "VISIBLE"
         );
     }
 }

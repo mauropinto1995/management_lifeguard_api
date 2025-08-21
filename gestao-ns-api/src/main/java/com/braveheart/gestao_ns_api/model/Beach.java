@@ -3,12 +3,14 @@ package com.braveheart.gestao_ns_api.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true,  exclude = "posts")
+@ToString(exclude = "posts")
 @Entity
 @Table(name = "beach")
 public class Beach extends AbstractIDModel{
